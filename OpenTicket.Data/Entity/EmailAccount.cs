@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace OpenTicket.Data.Entity
 {
@@ -15,8 +16,20 @@ namespace OpenTicket.Data.Entity
         public string ServerAddress { get; set; }
         public string MailBox { get; set; }
         public bool UseSecureConnection { get; set; }
-        public short Protocol { get; set; }
+        public MailProtocolType Protocol { get; set; }
 
         public virtual ICollection<Ticket> Tickets { get; set; } = new HashSet<Ticket>();
+    }
+
+    public enum MailProtocolType : short
+    {
+        [Description("IMAP")]
+        Imap = 1,
+
+        [Description("POP3")]
+        Pop3,
+
+        [Description("Microsoft 365")]
+        M365
     }
 }
