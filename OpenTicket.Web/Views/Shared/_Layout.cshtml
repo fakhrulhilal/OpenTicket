@@ -43,6 +43,7 @@
                     *@
                     <li class="nav-item">@Html.RouteLink("Home", new { controller = "Home", action = "Index" }, new { @class = "nav-link" })</li>
                     <li class="nav-item">@Html.RouteLink("Email Account", new { controller = "EmailAccount", action = "Index" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item"><a href="@Url.Content("~/hangfire")" class="nav-link">Jobs</a></li>
                 </ul>
             </div>
         </nav>

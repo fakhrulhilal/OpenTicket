@@ -2,6 +2,6 @@
 
 namespace OpenTicket.Domain.Command
 {
-    public class ImportEmailCommand : IRequest
+    public class ImportEmailCommand : IRequest<Unit>
     { }
 }

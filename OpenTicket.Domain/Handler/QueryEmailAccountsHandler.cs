@@ -11,13 +11,13 @@ using OpenTicket.Domain.Command;
 
 namespace OpenTicket.Domain.Handler
 {
-    public class GetEmailAccountQueryHandler : IRequestHandler<QueryEmailAccounts,
+    public class QueryEmailAccountsHandler : IRequestHandler<QueryEmailAccounts,
             IEnumerable<QueryEmailAccounts.EmailAccount>>
     {
         private readonly OpenTicketDbContext _db;
         private readonly IMapper _mapper;
 
-        public GetEmailAccountQueryHandler(OpenTicketDbContext db, IMapper mapper)
+        public QueryEmailAccountsHandler(OpenTicketDbContext db, IMapper mapper)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _db = db ?? throw new ArgumentNullException(nameof(db));
@@ -27,6 +27,7 @@ namespace OpenTicket.Domain.Handler
             CancellationToken cancellationToken)
         {
             var offset = (request.CurrentPage - 1) * request.PageSize;
+            if (offset < 0) offset = 0;
             var result = _db.EmailAccounts.AsNoTracking()
                 .Skip(offset).Take(request.PageSize)
                 .Select(ea => _mapper.Map<QueryEmailAccounts.EmailAccount>(ea)).ToArray();

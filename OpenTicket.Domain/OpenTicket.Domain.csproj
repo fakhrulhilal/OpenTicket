@@ -47,7 +47,7 @@
     <Compile Include="Handler\AddEmailAccountCommandHandler.cs" />
     <Compile Include="Handler\CreateTicketCommandHandler.cs" />
     <Compile Include="Handler\DeleteEmailAccountCommandHandler.cs" />
-    <Compile Include="Handler\GetEmailAccountQueryHandler.cs" />
+    <Compile Include="Handler\QueryEmailAccountsHandler.cs" />
     <Compile Include="Handler\ImportEmailCommandHandler.cs" />
     <Compile Include="Handler\QueryEmailAccountByIdHandler.cs" />
     <Compile Include="MailClient\IMailClient.cs" />

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using AutoMapper;
@@ -22,9 +21,9 @@ namespace OpenTicket.Web
 {
     internal static class DependencyConfig
     {
-        internal static void Bootstrap()
+        internal static void Bootstrap(Container container)
         {
-            var container = new Container();
+            if (container == null) throw new ArgumentNullException(nameof(container));
             container.Options.DefaultScopedLifestyle = new WebRequestLifestyle();
             Register(container);
             // This is an extension method from the integration package.
@@ -38,7 +37,8 @@ namespace OpenTicket.Web
             var mainConnectionSetting = ConfigurationManager.ConnectionStrings["Main"];
             if (mainConnectionSetting == null)
                 throw new ConfigurationErrorsException("No connection string named 'Main' defined in Web.config");
-            container.Register(() => new OpenTicketDbContext(mainConnectionSetting.ConnectionString), Lifestyle.Scoped);
+            container.RegisterDisposableTransient(() => new OpenTicketDbContext(mainConnectionSetting.ConnectionString), "Used in both web & hangfire");
+            container.Register<ImportEmailJob>(Lifestyle.Transient);
             container.Collection.Register<IMailClientFactory>(new[] { typeof(MailAdapter.MailMessageAdapter).Assembly }, Lifestyle.Singleton);
             RegisterAutoMapper(container);
             RegisterMediator(container);

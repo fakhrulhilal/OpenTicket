@@ -5,8 +5,6 @@ using MediatR;
 using OpenTicket.Domain.Command;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
-using OpenTicket.Data.Entity;
 using OpenTicket.Domain.MailClient;
 using OpenTicket.Domain.Utility;
 
@@ -14,19 +12,15 @@ namespace OpenTicket.Domain.Handler
 {
     public class ImportEmailCommandHandler : IRequestHandler<ImportEmailCommand>
     {
-        private readonly OpenTicketDbContext _db;
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
         private readonly IMailClientFactory[] _mailClientFactories;
 
-        public ImportEmailCommandHandler(OpenTicketDbContext db, IMediator mediator, IMapper mapper, IEnumerable<IMailClientFactory> mailClientFactories)
+        public ImportEmailCommandHandler(IMediator mediator, IEnumerable<IMailClientFactory> mailClientFactories)
         {
             var clientFactories = mailClientFactories as IMailClientFactory[] ?? mailClientFactories.ToArray();
             if (mailClientFactories == null || !clientFactories.Any()) throw new ArgumentNullException(nameof(mailClientFactories));
             _mailClientFactories = clientFactories;
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
         public async Task<Unit> Handle(ImportEmailCommand request, CancellationToken cancellationToken)
