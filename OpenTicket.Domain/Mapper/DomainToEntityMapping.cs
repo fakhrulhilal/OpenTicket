@@ -1,15 +1,22 @@
-﻿using OpenTicket.Domain.Utility;
+﻿using AutoMapper;
+using OpenTicket.Data.Entity;
+using OpenTicket.Domain.Command;
+using OpenTicket.Domain.Utility;
 
 namespace OpenTicket.Domain.Mapper
 {
-    public class DomainToEntityMapping : AutoMapper.Profile
+    public class DomainToEntityMapping : Profile
     {
         public DomainToEntityMapping()
         {
-            CreateMap<Command.AddEmailAccountCommand, Data.Entity.EmailAccount>()
+            CreateMap<AddEmailAccountCommand, EmailAccount>()
                 .ForMember(e => e.Username, map => map.MapFrom(cmd => cmd.UserId))
                 .ForMember(e => e.Password, map => map.MapFrom(cmd => cmd.Secret));
-            this.IgnoreUnmapped<Command.AddEmailAccountCommand, Data.Entity.EmailAccount>();
+            this.IgnoreUnmapped<AddEmailAccountCommand, EmailAccount>();
+            CreateMap<EditEmailAccountCommand, EmailAccount>()
+                .ForMember(e => e.Username, map => map.MapFrom(cmd => cmd.UserId))
+                .ForMember(e => e.Password, map => map.MapFrom(cmd => cmd.Secret));
+            this.IgnoreUnmapped<EditEmailAccountCommand, EmailAccount>();
         }
     }
 }

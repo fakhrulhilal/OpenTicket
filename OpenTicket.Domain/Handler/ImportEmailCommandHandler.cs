@@ -25,7 +25,8 @@ namespace OpenTicket.Domain.Handler
 
         public async Task<Unit> Handle(ImportEmailCommand request, CancellationToken cancellationToken)
         {
-            var emailAccounts = (await _mediator.Send(new QueryEmailAccounts(), cancellationToken)).ToArray();
+            var emailAccounts = (await _mediator.Send(new QueryEmailAccounts {IsActive = true}, cancellationToken))
+                .ToArray();
             foreach (var emailAccount in emailAccounts)
             {
                 var mailClientFactory = _mailClientFactories.FirstOrDefault(factory => factory.SupportedProtocol == emailAccount.Protocol);

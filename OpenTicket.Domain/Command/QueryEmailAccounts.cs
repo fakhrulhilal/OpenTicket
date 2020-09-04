@@ -6,6 +6,8 @@ namespace OpenTicket.Domain.Command
 {
     public class QueryEmailAccounts : PageableQuery, IRequest<IEnumerable<QueryEmailAccounts.EmailAccount>>
     {
+        public bool? IsActive { get; set; }
+        
         public class EmailAccount : MailClient.EmailAccount
         {
             public int Id { get; set; }

@@ -52,6 +52,10 @@ namespace OpenTicket.Data.Entity
             modelBuilder.Entity<EmailAccount>(entity =>
             {
                 entity.ToTable("EmailAccounts");
+                entity.Property(e => e.IsActive)
+                    .HasColumnName("IsActive")
+                    .IsRequired()
+                    .HasDefaultValue(true);
                 entity.Property(e => e.Email)
                     .HasColumnName("Email")
                     .IsRequired()

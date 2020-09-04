@@ -5,6 +5,7 @@ namespace OpenTicket.Domain.MailClient
     public abstract class EmailAccount
     {
         public string Email { get; set; }
+        public bool IsActive { get; set; }
         public string UserId { get; set; }
         public string Secret { get; set; }
         public string AccessToken { get; set; }

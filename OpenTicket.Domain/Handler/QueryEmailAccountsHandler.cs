@@ -28,7 +28,10 @@ namespace OpenTicket.Domain.Handler
         {
             var offset = (request.CurrentPage - 1) * request.PageSize;
             if (offset < 0) offset = 0;
-            var result = _db.EmailAccounts.AsNoTracking()
+            var emails = _db.EmailAccounts.AsNoTracking();
+            if (request.IsActive.HasValue)
+                emails = emails.Where(e => e.IsActive == request.IsActive.Value);
+            var result = emails
                 .Skip(offset).Take(request.PageSize)
                 .Select(ea => _mapper.Map<QueryEmailAccounts.EmailAccount>(ea)).ToArray();
             return Task.FromResult(result.AsEnumerable());

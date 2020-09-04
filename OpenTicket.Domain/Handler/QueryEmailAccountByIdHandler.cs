@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using OpenTicket.Data.Entity;
 using OpenTicket.Domain.Command;
 
@@ -19,9 +20,11 @@ namespace OpenTicket.Domain.Handler
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
-        public async Task<QueryEmailAccountById.EmailAccount> Handle(QueryEmailAccountById request, CancellationToken cancellationToken)
+        public async Task<QueryEmailAccountById.EmailAccount> Handle(QueryEmailAccountById request,
+            CancellationToken cancellationToken)
         {
-            var emailAccount = await _db.EmailAccounts.FindAsync(request.Id);
+            var emailAccount = await _db.EmailAccounts.AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken);
             return _mapper.Map<QueryEmailAccountById.EmailAccount>(emailAccount);
         }
     }

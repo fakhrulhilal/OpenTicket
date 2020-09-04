@@ -47,13 +47,13 @@
     <Compile Include="Handler\AddEmailAccountCommandHandler.cs" />
     <Compile Include="Handler\CreateTicketCommandHandler.cs" />
     <Compile Include="Handler\DeleteEmailAccountCommandHandler.cs" />
+    <Compile Include="Handler\EditEmailAccountCommandHandler.cs" />
     <Compile Include="Handler\QueryEmailAccountsHandler.cs" />
     <Compile Include="Handler\ImportEmailCommandHandler.cs" />
     <Compile Include="Handler\QueryEmailAccountByIdHandler.cs" />
     <Compile Include="MailClient\IMailClient.cs" />
     <Compile Include="MailClient\IMailClientFactory.cs" />
     <Compile Include="Mapper\DomainToEntityMapping.cs" />
-    <Compile Include="Mapper\EditEmailAccountCommandHandler.cs" />
     <Compile Include="Mapper\EntityToDomainMapping.cs" />
     <Compile Include="Mapper\ResultMapping.cs" />
     <Compile Include="MailClient\EmailAccount.cs" />
