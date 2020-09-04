@@ -44,6 +44,7 @@
     <Compile Include="Command\QueryEmailAccounts.cs" />
     <Compile Include="Command\PageableQuery.cs" />
     <Compile Include="Command\QueryEmailAccountById.cs" />
+    <Compile Include="Command\QueryTickets.cs" />
     <Compile Include="Handler\AddEmailAccountCommandHandler.cs" />
     <Compile Include="Handler\CreateTicketCommandHandler.cs" />
     <Compile Include="Handler\DeleteEmailAccountCommandHandler.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Handler\QueryEmailAccountsHandler.cs" />
     <Compile Include="Handler\ImportEmailCommandHandler.cs" />
     <Compile Include="Handler\QueryEmailAccountByIdHandler.cs" />
+    <Compile Include="Handler\QueryTicketsHandler.cs" />
     <Compile Include="MailClient\IMailClient.cs" />
     <Compile Include="MailClient\IMailClientFactory.cs" />
     <Compile Include="Mapper\DomainToEntityMapping.cs" />
