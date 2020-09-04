@@ -5,6 +5,7 @@ using MediatR;
 using OpenTicket.Domain.Command;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using OpenTicket.Domain.MailClient;
 using OpenTicket.Domain.Utility;
 
@@ -14,9 +15,11 @@ namespace OpenTicket.Domain.Handler
     {
         private readonly IMediator _mediator;
         private readonly IMailClientFactory[] _mailClientFactories;
+        private readonly IMapper _mapper;
 
-        public ImportEmailCommandHandler(IMediator mediator, IEnumerable<IMailClientFactory> mailClientFactories)
+        public ImportEmailCommandHandler(IMediator mediator, IMapper mapper, IEnumerable<IMailClientFactory> mailClientFactories)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             var clientFactories = mailClientFactories as IMailClientFactory[] ?? mailClientFactories.ToArray();
             if (mailClientFactories == null || !clientFactories.Any()) throw new ArgumentNullException(nameof(mailClientFactories));
             _mailClientFactories = clientFactories;
@@ -36,15 +39,16 @@ namespace OpenTicket.Domain.Handler
 
                 using (var mailClient = mailClientFactory.Build(emailAccount))
                 {
-                    /**
-                     * TODO: 
-                     * 1. Use mail client factory to build the client
-                     * 2. Initialize connection to mail server
-                     * 3. Fetch all new mail IDs
-                     * 4. Fetch each mail message
-                     * 5. Remove the email when requested
-                     * 6. Create ticket from email
-                     */
+                    await mailClient.InitializeConnectionAsync(cancellationToken);
+                    await mailClient.AuthenticateAsync(cancellationToken);
+                    var messages = mailClient.FetchNewMessages();
+                    foreach (var message in messages)
+                    {
+                        var command = _mapper.Map<CreateTicketCommand>(message);
+                        command.EmailAccountId = emailAccount.Id;
+                        await _mediator.Send(command, cancellationToken);
+                        await mailClient.DeleteAsync(message, cancellationToken);
+                    }
                 }
             }
             return Unit.Value;

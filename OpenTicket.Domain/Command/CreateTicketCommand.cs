@@ -8,5 +8,6 @@ namespace OpenTicket.Domain.Command
         public string Question { get; set; }
         public string CustomerName { get; set; }
         public string CustomerEmail { get; set; }
+        public int EmailAccountId { get; set; }
     }
 }

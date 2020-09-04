@@ -1,4 +1,5 @@
 ﻿using OpenTicket.Domain.Command;
+using OpenTicket.Domain.Utility;
 
 namespace OpenTicket.Domain.Mapper
 {
@@ -11,7 +12,8 @@ namespace OpenTicket.Domain.Mapper
                 .ForMember(p => p.CustomerEmail, map => map.MapFrom(src => src.From.Address))
                 .ForMember(p => p.CustomerName, map => map.MapFrom(src => src.From.DisplayName))
                 .ForMember(p => p.Title, map => map.MapFrom(src => src.Subject))
-                .ForMember(p => p.Question, map => map.MapFrom(src => src.HtmlBody));
+                .ForMember(p => p.Question, map => map.MapFrom(src => src.Body));
+            this.IgnoreUnmapped<MailClient.IMailMessage, CreateTicketCommand>();
         }
     }
 }
