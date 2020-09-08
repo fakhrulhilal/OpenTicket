@@ -1,0 +1,23 @@
+﻿@model OpenTicket.Web.Models.OAuth2AuthRequest
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign in to Microsoft 365 Account</title>
+</head>
+<body onload="document.forms[0].submit()">
+<form action="@Model.AuthUri" method="post">
+    <input type="hidden" name="client_id" value="@Model.ClientId"/>
+    <input type="hidden" name="response_type" value="@Model.ResponseType" />
+    <input type="hidden" name="redirect_uri" value="@Model.Redirect" />
+    <input type="hidden" name="scope" value="@string.Join(" ", Model.Scopes)"/>
+    <input type="hidden" name="response_mode" value="@Model.ResponseMode" />
+    <input type="hidden" name="state" value="@Model.State" />
+    <input type="hidden" name="prompt" value="@Model.Prompt" />
+    <input type="hidden" name="code_challenge" value="@Model.CodeChallenge" />
+    <input type="hidden" name="code_challenge_method" value="@Model.CodeChallengeMethod" />
+</form>
+</body>
+</html>

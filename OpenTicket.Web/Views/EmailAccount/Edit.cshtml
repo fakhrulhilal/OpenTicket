@@ -44,6 +44,7 @@
         @Html.TextBoxFor(p => p.MailBox)
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
+    <button id="btn-login" type="submit" class="btn btn-primary" @@click="signInExternal">Sign In</button>
 }
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script type="text/javascript">
@@ -58,6 +59,10 @@
             suggestUsername: function () {
                 if (this.protocol !== 'M365' && !/^\s*$/.test(this.email))
                     this.userId = this.email;
+            },
+            signInExternal: function () {
+                let form = document.getElementsByTagName('form')[0];
+                form.setAttribute('action', '@Url.Action("SignInExternal")');
             }
         }
     })

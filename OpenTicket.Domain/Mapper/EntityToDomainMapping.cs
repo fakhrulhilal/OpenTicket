@@ -1,5 +1,4 @@
-﻿using System.Security.AccessControl;
-using OpenTicket.Domain.Utility;
+﻿using OpenTicket.Domain.Utility;
 
 namespace OpenTicket.Domain.Mapper
 {
@@ -19,6 +18,11 @@ namespace OpenTicket.Domain.Mapper
                 .ForMember(dst => dst.CustomerName, map => map.MapFrom(src => src.Customer.DisplayName))
                 .ForMember(dst => dst.CustomerEmail, map => map.MapFrom(src => src.Customer.Email));
             this.IgnoreUnmapped<Data.Entity.Ticket, Command.QueryTickets.Ticket>();
+            CreateMap<Data.Entity.EmailAccount, Command.QueryTenantByClientId.Tenant>()
+                .ForMember(dst => dst.ClientId, map => map.MapFrom(src => src.Username))
+                .ForMember(dst => dst.Secret, map => map.MapFrom(src => src.Password))
+                .ForMember(dst => dst.TenantId, map => map.MapFrom(src => src.Email.Split('@')[1]));
+            this.IgnoreUnmapped<Data.Entity.EmailAccount, Command.QueryTenantByClientId.Tenant>();
         }
     }
 }
