@@ -39,7 +39,7 @@ namespace OpenTicket.Web
                 throw new ConfigurationErrorsException("No connection string named 'Main' defined in Web.config");
             container.RegisterDisposableTransient(() => new OpenTicketDbContext(mainConnectionSetting.ConnectionString), "Used in both web & hangfire");
             container.Register<ImportEmailJob>(Lifestyle.Transient);
-            container.Collection.Register<IMailClientFactory>(new[] { typeof(MailAdapter.MailMessageAdapter).Assembly }, Lifestyle.Singleton);
+            container.Collection.Register<IMailClientFactory>(typeof(MailAdapter.MailMessageAdapter).Assembly);
             RegisterAutoMapper(container);
             RegisterMediator(container);
             RegisterFluentValidation(container);

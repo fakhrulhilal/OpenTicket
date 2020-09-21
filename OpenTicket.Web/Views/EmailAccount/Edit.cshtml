@@ -1,7 +1,7 @@
 ﻿@using OpenTicket.Domain.MailClient
 @model OpenTicket.Domain.Command.EditEmailAccountCommand
 @{
-    ViewBag.ActiveMenu = "EmailAccount";                                                                             
+    ViewBag.ActiveMenu = "EmailAccount";
     ViewBag.Title = "Add Email Account";
 }
 
@@ -12,7 +12,7 @@
     @Html.HiddenFor(p => p.Id)
     <div class="form-group">
         @Html.LabelFor(p => p.Email)
-        <input type="text" name="@Html.IdFor(p => p.Email)" class="form-control" v-on:change="suggestUsername" v-model="email" value="@Html.ValueFor(p => p.Email)" />
+        <input type="text" name="@Html.IdFor(p => p.Email)" class="form-control" v-on:change="suggestUsername" v-model="email" value="@Html.ValueFor(p => p.Email)"/>
     </div>
     <div class="form-group form-check">
         @Html.CheckBoxFor(p => p.IsActive, new { @class = "form-check-input" })
@@ -44,7 +44,7 @@
         @Html.TextBoxFor(p => p.MailBox)
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
-    <button id="btn-login" type="submit" class="btn btn-primary" @@click="signInExternal">Sign In</button>
+    <button id="btn-login" type="submit" class="btn btn-primary" v-if="protocol == 'M365'" @@click="signInExternal">Sign In</button>
 }
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script type="text/javascript">
@@ -62,8 +62,22 @@
             },
             signInExternal: function () {
                 let form = document.getElementsByTagName('form')[0];
+                form.setAttribute('target', '_blank');
+                form.setAttribute('data-original-action', form.getAttribute('action'));
                 form.setAttribute('action', '@Url.Action("SignInExternal")');
+                let submitButton = document.querySelector('button[type="submit"]');
+                submitButton.setAttribute('disabled', 'disabled');
             }
         }
     })
+    window.addEventListener('message', function (event) {
+        if (event.data.AccessToken && !/^\s*$/.test(event.data.AccessToken)) {
+            let submitButton = document.querySelector('button[type="submit"]');
+            submitButton.removeAttribute('disabled');
+            let form = document.getElementsByTagName('form')[0];
+            form.setAttribute('action', form.getAttribute('data-original-action'));
+            form.removeAttribute('data-original-action');
+            form.removeAttribute('target');
+       }
+    });
 </script>

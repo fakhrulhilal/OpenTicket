@@ -1,40 +1,40 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
-namespace OpenTicket.Web.Models
+namespace OpenTicket.Helper
 {
     public class TokenResponse
     {
-        [JsonProperty("access_token")]
+        [JsonPropertyName("access_token")]
         public string AccessToken { get; set; }
         
-        [JsonProperty("token_type")]
+        [JsonPropertyName("token_type")]
         public string TokenType { get; set; }
         
-        [JsonProperty("expires_in")]
+        [JsonPropertyName("expires_in")]
         public int ExpiresIn { get; set; }
         public string Scope { get; set; }
         
-        [JsonProperty("refresh_token")]
+        [JsonPropertyName("refresh_token")]
         public string RefreshToken { get; set; }
         
-        [JsonProperty("id_token")]
+        [JsonPropertyName("id_token")]
         public string IdToken { get; set; }
 
         public string Error { get; set; }
         
-        [JsonProperty("error_description")]
+        [JsonPropertyName("error_description")]
         public string ErrorDescription { get; set; }
         
-        [JsonProperty("error_codes")]
+        [JsonPropertyName("error_codes")]
         public int[] ErrorCodes { get; set; }
         
         public DateTime TimeStamp { get; set; }
         
-        [JsonProperty("trace_id")]
+        [JsonPropertyName("trace_id")]
         public Guid TraceId { get; set; }
         
-        [JsonProperty("correlation_id")]
+        [JsonPropertyName("correlation_id")]
         public Guid CorrelationId { get; set; }
     }
 }

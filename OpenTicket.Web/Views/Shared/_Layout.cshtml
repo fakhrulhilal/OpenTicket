@@ -7,47 +7,44 @@
     <meta name="author" content="Fakhrulhilal Maktum">
     <title>@ViewBag.Title - Open Ticket Solution</title>
     <meta name="theme-color" content="#563d7c">
-    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z">
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet">
     @Styles.Render("~/assets/css/main.css")
 </head>
 <body class="d-flex flex-column h-100">
-    <header>
-        <!-- Fixed navbar -->
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            @Html.ActionLink("Open Ticket Solution", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav mr-auto">
-                    @*
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                        </li>
-                    *@
-                    <li class="nav-item @(string.IsNullOrEmpty(ViewBag.ActiveMenu) ? "active" : "")">@Html.RouteLink("Home", new { controller = "Home", action = "Index" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item @(ViewBag.ActiveMenu == "EmailAccount" ? "active" : "")">@Html.RouteLink("Email Account", new { controller = "EmailAccount", action = "Index" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item @(ViewBag.ActiveMenu == "Ticket" ? "active" : "")">@Html.RouteLink("Ticket", new { controller = "Ticket", action = "Index" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item"><a href="@Url.Content("~/hangfire")" class="nav-link">Jobs</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Begin page content -->
-    <main role="main" class="flex-shrink-0">
-        <div class="container">
-            @RenderBody()
+<header>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        @Html.ActionLink("Open Ticket Solution", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item @(string.IsNullOrEmpty(ViewBag.ActiveMenu) ? "active" : "")">@Html.RouteLink("Home", new { controller = "Home", action = "Index" }, new { @class = "nav-link" })</li>
+                <li class="nav-item @(ViewBag.ActiveMenu == "EmailAccount" ? "active" : "")">@Html.RouteLink("Email Account", new { controller = "EmailAccount", action = "Index" }, new { @class = "nav-link" })</li>
+                <li class="nav-item @(ViewBag.ActiveMenu == "Ticket" ? "active" : "")">@Html.RouteLink("Ticket", new { controller = "Ticket", action = "Index" }, new { @class = "nav-link" })</li>
+                <li class="nav-item">
+                    <a href="@Url.Content("~/hangfire")" class="nav-link">Jobs</a>
+                </li>
+            </ul>
         </div>
-    </main>
+    </nav>
+</header>
 
-    <footer class="footer mt-auto py-3">
-        <div class="container">
-            <span class="text-muted">&copy; @DateTime.Now.Year Open Ticket Solution</span>
-        </div>
-    </footer>
-    @Scripts.Render("~/bundles/jquery")
-    <script src="~/assets/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf" crossorigin="anonymous"></script>
-    @RenderSection("scripts", required: false)
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    <div class="container">
+        @RenderBody()
+    </div>
+</main>
+
+<footer class="footer mt-auto py-3">
+    <div class="container">
+        <span class="text-muted">&copy; @DateTime.Now.Year Open Ticket Solution</span>
+    </div>
+</footer>
+@Scripts.Render("~/bundles/jquery")
+<script src="~/assets/js/bootstrap.bundle.min.js"></script>
+@RenderSection("scripts", false)
 </body>
 </html>

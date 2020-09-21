@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<OpenTicket.Domain.Command.QueryTickets.Ticket>
 
 @{
-    ViewBag.ActiveMenu = "Ticket";                                                                             
+    ViewBag.ActiveMenu = "Ticket";
     ViewBag.Title = "Tickets";
 }
 
@@ -19,7 +19,9 @@
     @foreach (var ticket in Model)
     {
         <tr>
-            <td><a href="mailto:@ticket.CustomerEmail" title="Send email to customer">@ticket.CustomerName</a></td>
+            <td>
+                <a href="mailto:@ticket.CustomerEmail" title="Send email to customer">@ticket.CustomerName</a>
+            </td>
             <td>@ticket.Title</td>
             <td>@ticket.CreatedDateTime.ToString("f")</td>
         </tr>

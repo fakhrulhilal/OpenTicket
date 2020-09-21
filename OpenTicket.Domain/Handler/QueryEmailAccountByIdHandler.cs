@@ -24,7 +24,7 @@ namespace OpenTicket.Domain.Handler
             CancellationToken cancellationToken)
         {
             var emailAccount = await _db.EmailAccounts.AsNoTracking()
-                .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken);
+                .FirstOrDefaultAsync(e => !e.DraftId.HasValue && e.Id == request.Id, cancellationToken);
             return _mapper.Map<QueryEmailAccountById.EmailAccount>(emailAccount);
         }
     }

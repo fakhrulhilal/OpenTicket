@@ -1,12 +1,12 @@
-﻿using FluentValidation;
+using FluentValidation;
 using OpenTicket.Domain.Command;
 using OpenTicket.Domain.MailClient;
 
 namespace OpenTicket.Domain.Validator
 {
-    public class AddEmailAccountCommandValidator : AbstractValidator<AddEmailAccountCommand>
+    public class SaveTemporaryEmailAccountCommandValidator : AbstractValidator<SaveTemporaryEmailAccountCommand>
     {
-        public AddEmailAccountCommandValidator()
+        public SaveTemporaryEmailAccountCommandValidator()
         {
             RuleFor(p => p.Email).NotEmpty().MaximumLength(100);
             RuleFor(p => p.UserId).NotEmpty().MaximumLength(250);

@@ -14,6 +14,8 @@ namespace OpenTicket.Domain.Mapper
                 .ForMember(p => p.Title, map => map.MapFrom(src => src.Subject))
                 .ForMember(p => p.Question, map => map.MapFrom(src => src.Body));
             this.IgnoreUnmapped<MailClient.IMailMessage, CreateTicketCommand>();
+            CreateMap<EditEmailAccountCommand, SaveTemporaryEmailAccountCommand>();
+            this.IgnoreUnmapped<EditEmailAccountCommand, SaveTemporaryEmailAccountCommand>();
         }
     }
 }

@@ -33,6 +33,9 @@ namespace OpenTicket.Data.Entity
         {
             if (!string.IsNullOrWhiteSpace(_connectionString))
                 optionsBuilder.UseSqlServer(_connectionString);
+            else
+                optionsBuilder.UseSqlServer(
+                    "Data Source=(local);Initial Catalog=OpenTicket;Integrated Security=true;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -56,6 +59,8 @@ namespace OpenTicket.Data.Entity
                     .HasColumnName("IsActive")
                     .IsRequired()
                     .HasDefaultValue(true);
+                entity.Property(e => e.DraftId)
+                    .HasColumnName("DraftId");
                 entity.Property(e => e.Email)
                     .HasColumnName("Email")
                     .IsRequired()
@@ -76,6 +81,10 @@ namespace OpenTicket.Data.Entity
                     .HasColumnName("Protocol")
                     .IsRequired()
                     .HasConversion<short>();
+                entity.Property(e => e.AccessToken)
+                    .HasColumnName("AccessToken");
+                entity.Property(e => e.RefreshToken)
+                    .HasColumnName("RefreshToken");
             });
 
             modelBuilder.Entity<Ticket>(entity =>

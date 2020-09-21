@@ -36,9 +36,18 @@ namespace OpenTicket.Domain.Handler
                 entity.Password = existingEmailAccount.Password;
             if (entity.Protocol == MailProtocolType.M365)
             {
+                var draftEmailAccount = await _db.EmailAccounts.FirstOrDefaultAsync(
+                    ea => ea.Email == request.Email && ea.DraftId == request.Id, cancellationToken);
+                if (draftEmailAccount == null)
+                    throw new InvalidOperationException("Token not acquired");
+
                 entity.ServerPort = 993;
                 entity.ServerAddress = "outlook.office365.com";
                 entity.UseSecureConnection = true;
+                entity.AccessToken = draftEmailAccount.AccessToken;
+                entity.RefreshToken = draftEmailAccount.RefreshToken;
+                entity.LastUpdateAccessToken = draftEmailAccount.LastUpdateAccessToken;
+                _db.EmailAccounts.Remove(draftEmailAccount);
             }
             _db.EmailAccounts.Update(entity);
             await _db.SaveChangesAsync(cancellationToken);

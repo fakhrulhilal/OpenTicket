@@ -16,16 +16,22 @@ namespace OpenTicket.MailAdapter
     {
         protected MailKit.Net.Imap.ImapClient Client;
         protected readonly EmailAccount Account;
-        protected IMailFolder Mailbox;
+        private IMailFolder _mailbox;
+        private bool _disposed;
 
         public ImapClient(EmailAccount account) =>
             Account = account ?? throw new ArgumentNullException(nameof(account));
 
         public void Dispose()
         {
-            Mailbox.Expunge();
-            Client.Disconnect(true);
-            Client.Dispose();
+            if (_disposed) return;
+            _mailbox?.Expunge();
+            if (Client != null && Client.IsConnected)
+            {
+                Client.Disconnect(true);
+                Client.Dispose();
+            }
+            _disposed = true;
         }
 
         public async Task InitializeConnectionAsync(CancellationToken cancellationToken)
@@ -49,16 +55,19 @@ namespace OpenTicket.MailAdapter
         public virtual async Task AuthenticateAsync(CancellationToken cancellationToken)
         {
             await Client.AuthenticateAsync(Account.UserId, Account.Secret, cancellationToken);
-            Mailbox = await Client.GetFolderAsync(Account.MailBox ?? "INBOX", cancellationToken);
-            await Mailbox.OpenAsync(FolderAccess.ReadWrite, cancellationToken);
         }
 
         public IEnumerable<IMailMessage> FetchNewMessages()
         {
-            var ids = Mailbox.Search(SearchQuery.All);
+            if (_mailbox == null)
+            {
+                _mailbox = Client.GetFolder(Account.MailBox ?? "INBOX");
+                _mailbox.Open(FolderAccess.ReadWrite);
+            }
+            var ids = _mailbox.Search(SearchQuery.All);
             foreach (var id in ids)
             {
-                var message = Mailbox.GetMessage(id);
+                var message = _mailbox.GetMessage(id);
                 yield return new ImapMessage(id, message);
             }
         }
@@ -67,7 +76,7 @@ namespace OpenTicket.MailAdapter
         {
             if (!(message is ImapMessage imapMessage))
                 throw new InvalidOperationException("Only support deleting message fetched through this client");
-            await Mailbox.AddFlagsAsync(imapMessage.Id, MessageFlags.Deleted, true, cancellationToken);
+            await _mailbox.AddFlagsAsync(imapMessage.Id, MessageFlags.Deleted, true, cancellationToken);
         }
 
         private class ImapMessage : MailMessageAdapter

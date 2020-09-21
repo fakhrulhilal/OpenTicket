@@ -14,14 +14,17 @@ namespace OpenTicket.MailAdapter
     {
         private MailKit.Net.Pop3.Pop3Client _client;
         private readonly EmailAccount _account;
+        private bool _disposed;
 
         public Pop3Client(EmailAccount account) =>
             _account = account ?? throw new ArgumentNullException(nameof(account));
 
         public void Dispose()
         {
+            if (_disposed || _client == null || !_client.IsConnected) return;
             _client.Disconnect(true);
             _client.Dispose();
+            _disposed = true;
         }
 
         public async Task InitializeConnectionAsync(CancellationToken cancellationToken)

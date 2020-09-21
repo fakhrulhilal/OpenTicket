@@ -52,9 +52,17 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OpenTicket.Data\OpenTicket.Data.csproj">
+      <Project>{1193ae1d-3250-499d-8474-42c8ae2caa94}</Project>
+      <Name>OpenTicket.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenTicket.Domain\OpenTicket.Domain.csproj">
       <Project>{70d02232-b862-4eac-8fb3-0511c29885b5}</Project>
       <Name>OpenTicket.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenTicket.Helper\OpenTicket.Helper.csproj">
+      <Project>{adb43f94-4c5a-4542-b29c-f22fd0329ec3}</Project>
+      <Name>OpenTicket.Helper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

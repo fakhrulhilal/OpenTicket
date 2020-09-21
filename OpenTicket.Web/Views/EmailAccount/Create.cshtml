@@ -13,7 +13,11 @@
         @Html.LabelFor(p => p.Email)
         <input type="text" name="@Html.IdFor(p => p.Email)" class="form-control" v-on:change="suggestUsername" v-model="email" />
     </div>
-    <div class="form-group">
+    <div class="form-group form-check">
+        @Html.CheckBoxFor(p => p.IsActive, new { @class = "form-check-input" })
+        @Html.LabelFor(p => p.IsActive, new { @class = "form-check-label" })
+    </div>
+   <div class="form-group">
         <label for="@Html.IdFor(p => p.UserId)">{{ protocol == 'M365' ? 'Client ID' : 'Username' }}</label>
         @Html.TextBoxFor(p => p.UserId, new { @class = "form-control", v_model = "userId" })
     </div>
@@ -39,6 +43,7 @@
         @Html.TextBoxFor(p => p.MailBox)
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
+    <button id="btn-login" type="submit" class="btn btn-primary" v-if="protocol == 'M365'" @@click="signInExternal">Sign In</button>
 }
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script type="text/javascript">
@@ -53,7 +58,25 @@
             suggestUsername: function () {
                 if (this.protocol !== 'M365' && !/^\s*$/.test(this.email))
                     this.userId = this.email;
+            },
+            signInExternal: function () {
+                let form = document.getElementsByTagName('form')[0];
+                form.setAttribute('target', '_blank');
+                form.setAttribute('data-original-action', form.getAttribute('action'));
+                form.setAttribute('action', '@Url.Action("SignInExternal")');
+                let submitButton = document.querySelector('button[type="submit"]');
+                submitButton.setAttribute('disabled', 'disabled');
             }
         }
     })
+    window.addEventListener('message', function (event) {
+        if (event.data.AccessToken && !/^\s*$/.test(event.data.AccessToken)) {
+            let submitButton = document.querySelector('button[type="submit"]');
+            submitButton.removeAttribute('disabled');
+            let form = document.getElementsByTagName('form')[0];
+            form.setAttribute('action', form.getAttribute('data-original-action'));
+            form.removeAttribute('data-original-action');
+            form.removeAttribute('target');
+       }
+    });
 </script>

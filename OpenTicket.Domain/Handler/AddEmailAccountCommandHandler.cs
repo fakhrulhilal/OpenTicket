@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using OpenTicket.Data.Entity;
 using OpenTicket.Domain.Command;
 
@@ -29,11 +30,23 @@ namespace OpenTicket.Domain.Handler
             var entity = _mapper.Map<EmailAccount>(request);
             if (entity.Protocol == MailProtocolType.M365)
             {
-                entity.ServerPort = 993;
-                entity.ServerAddress = "outlook.office365.com";
-                entity.UseSecureConnection = true;
+                var draftEmailAccount =
+                    await _dbContext.EmailAccounts.FirstOrDefaultAsync(
+                        ea => ea.Email == request.Email && ea.DraftId == AddEmailAccountCommand.DraftId, cancellationToken);
+                if (draftEmailAccount == null)
+                    throw new InvalidOperationException("Token not acquired");
+                draftEmailAccount.ServerPort = 993;
+                draftEmailAccount.ServerAddress = "outlook.office365.com";
+                draftEmailAccount.UseSecureConnection = true;
+                draftEmailAccount.DraftId = null;
+                // TODO: populate other settings
+                draftEmailAccount.IsActive = entity.IsActive;
+                _dbContext.EmailAccounts.Update(draftEmailAccount);
             }
-            await _dbContext.EmailAccounts.AddAsync(entity, cancellationToken);
+            else
+            {
+                await _dbContext.EmailAccounts.AddAsync(entity, cancellationToken);
+            }
             await _dbContext.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }

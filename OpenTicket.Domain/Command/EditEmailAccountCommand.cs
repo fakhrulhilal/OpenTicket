@@ -2,6 +2,8 @@
 
 namespace OpenTicket.Domain.Command
 {
-    public class EditEmailAccountCommand : QueryEmailAccountById.EmailAccount, IRequest<Unit>
-    { }
+    public class EditEmailAccountCommand : MailClient.EmailAccount, IRequest<Unit>
+    {
+        public int Id { get; set; }
+    }
 }

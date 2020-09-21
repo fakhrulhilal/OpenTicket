@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using OpenTicket.Domain.Command;
+using OpenTicket.Helper;
 using OpenTicket.Web.Models;
 
 namespace OpenTicket.Web.Controllers
@@ -13,8 +12,6 @@ namespace OpenTicket.Web.Controllers
     {
         private readonly MediatR.IMediator _mediator;
         private readonly AutoMapper.IMapper _mapper;
-        private readonly string[] _requiredScopes =
-            {"openid", "profile", "email", "offline_access", "IMAP.AccessAsUser.All", "POP.AccessAsUser.All"};
 
         public EmailAccountController(MediatR.IMediator mediator, AutoMapper.IMapper mapper)
         {
@@ -57,27 +54,11 @@ namespace OpenTicket.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> SignInExternal(EditEmailAccountCommand command)
+        public async Task<ActionResult> SignInExternal(SaveTemporaryEmailAccountCommand command)
         {
-            QueryEmailAccountById.EmailAccount emailAccount;
-            if (string.IsNullOrWhiteSpace(command.UserId))
-            {
-                emailAccount = await _mediator.Send(new QueryEmailAccountById(command.Id));
-                if (emailAccount == null)
-                {
-                    ModelState.AddModelError(nameof(EditEmailAccountCommand.Id), "Unknown email account");
-                    return RedirectToAction("Edit", new {command.Id});
-                }
-            }
-            else
-            {
-                emailAccount = _mapper.Map<QueryEmailAccountById.EmailAccount>(command);
-            }
-
-            string tenant = emailAccount.Email.Split('@')[1];
-            var oAuth2AuthRequest =
-                OAuth2AuthRequest.Create(tenant, emailAccount.UserId,
-                    new Uri($"{Request.GetBaseUrl()}{Url.Action("LandingExternal")}"), _requiredScopes);
+            await _mediator.Send(command);
+            var oAuth2AuthRequest = OAuth2Helper.CreateRequest(command.Email, command.UserId,
+                $"{Request.GetBaseUrl()}{Url.Action("LandingExternal")}", M365Helper.EmailScopes);
             return View(oAuth2AuthRequest);
         }
 
@@ -86,37 +67,31 @@ namespace OpenTicket.Web.Controllers
         {
             if (string.IsNullOrWhiteSpace(response.Code))
                 return Json(response, "application/json", JsonRequestBehavior.AllowGet);
-            var (tenantId, clientId, verifier) = OAuth2AuthRequest.ParseState(response.State);
-            if (clientId == null)
+            var state = OAuth2Helper.ParseState(response.State);
+            if (state.ClientId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.ExpectationFailed,
                     "Invalid session data returned after login from M365");
 
-            var tenant = await _mediator.Send(new QueryTenantByClientId(clientId));
-            if (tenant.TenantId != tenantId)
+            var tenant = await _mediator.Send(new QueryTenantByClientId(state.ClientId));
+            if (tenant.TenantId != state.Tenant)
                 return new HttpStatusCodeResult(HttpStatusCode.ExpectationFailed,
                     "Invalid tenant returned after login from M365");
-            using (var httpClient = new HttpClient())
+            var tokenResponse = await OAuth2Helper.AcquireTokenAsync(new AcquireTokenRequest
             {
-                var postBody = new Dictionary<string, string>
-                {
-                    ["client_id"] = tenant.ClientId,
-                    ["grant_type"] = "authorization_code",
-                    ["scope"] = string.Join(" ", _requiredScopes),
-                    ["code"] = response.Code,
-                    ["redirect_uri"] = $"{Request.GetBaseUrl()}{Url.Action("LandingExternal")}",
-                    ["client_secret"] = tenant.Secret,
-                    ["code_verifier"] = verifier
-                };
-                var httpRequest =
-                    new HttpRequestMessage(HttpMethod.Post, M365Helper.BuildTokenUri(tenant.TenantId))
-                    {
-                        Content = new FormUrlEncodedContent(postBody)
-                    };
-                var httpResponse = await httpClient.SendAsync(httpRequest);
-                string responseString = await httpResponse.Content.ReadAsStringAsync();
-                var tokenResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<TokenResponse>(responseString);
-                return Json(tokenResponse, "application/json", JsonRequestBehavior.AllowGet);
-            }
+                Tenant = tenant.TenantId,
+                ClientId = tenant.ClientId,
+                Secret = tenant.Secret,
+                ResponseCode = response.Code,
+                CodeVerifier = state.CodeVerifier,
+                RedirectUri = $"{Request.GetBaseUrl()}{Url.Action("LandingExternal")}"
+            });
+            await _mediator.Send(new SaveEmailAccountTokenCommand
+            {
+                Email = state.Email,
+                AccessToken = tokenResponse.AccessToken,
+                RefreshToken = tokenResponse.RefreshToken
+            });
+            return View(tokenResponse);
         }
 
         [HttpGet]

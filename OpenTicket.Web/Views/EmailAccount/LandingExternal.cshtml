@@ -1,0 +1,22 @@
+@model OpenTicket.Helper.TokenResponse
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <title>Signing in using M365</title>
+</head>
+<body onload="passToParent()">
+<script>
+function passToParent() {
+    var data = JSON.parse('@Html.Raw(Json.Encode(Model))');
+    window.opener.postMessage(data);
+    window.close();
+}
+</script>
+</body>
+</html>
