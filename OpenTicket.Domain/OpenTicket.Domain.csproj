@@ -37,9 +37,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\AddEmailAccountCommand.cs" />
+    <Compile Include="Command\AddExternalAccountCommand.cs" />
     <Compile Include="Command\CreateTicketCommand.cs" />
     <Compile Include="Command\DeleteEmailAccountCommand.cs" />
     <Compile Include="Command\EditEmailAccountCommand.cs" />
+    <Compile Include="Command\EditExternalAccountCommand.cs" />
+    <Compile Include="Command\GetAllExternalAccountQuery.cs" />
+    <Compile Include="Command\GetExternalAccountDetailQuery.cs" />
     <Compile Include="Command\ImportEmailCommand.cs" />
     <Compile Include="Command\QueryEmailAccounts.cs" />
     <Compile Include="Command\PageableQuery.cs" />

@@ -288,6 +288,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\EmailAccountController.cs" />
+    <Compile Include="Controllers\ExternalAccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="FluentValidationSimpleInjectorAdapter.cs" />
@@ -322,6 +323,9 @@
     <Content Include="assets\js\jquery.validate.unobtrusive.min.js" />
     <Content Include="Views\EmailAccount\LandingExternal.cshtml" />
     <Content Include="Views\EmailAccount\SignInExternal.cshtml" />
+    <Content Include="Views\ExternalAccount\Create.cshtml" />
+    <Content Include="Views\ExternalAccount\Edit.cshtml" />
+    <Content Include="Views\ExternalAccount\Index.cshtml" />
     <Content Include="Views\Ticket\Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -333,7 +337,6 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.Original.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\EmailAccount\Index.cshtml" />
     <Content Include="Views\EmailAccount\Create.cshtml" />

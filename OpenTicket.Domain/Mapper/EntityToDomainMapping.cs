@@ -23,6 +23,10 @@ namespace OpenTicket.Domain.Mapper
                 .ForMember(dst => dst.Secret, map => map.MapFrom(src => src.Password))
                 .ForMember(dst => dst.TenantId, map => map.MapFrom(src => src.Email.Split('@')[1]));
             this.IgnoreUnmapped<Data.Entity.EmailAccount, Command.QueryTenantByClientId.Tenant>();
+            CreateMap<Data.Entity.ExternalAccount, Command.GetAllExternalAccountQuery.Result>();
+            this.IgnoreUnmapped<Data.Entity.ExternalAccount, Command.GetAllExternalAccountQuery.Result>();
+            CreateMap<Data.Entity.ExternalAccount, Command.GetExternalAccountDetailQuery.Result>();
+            this.IgnoreUnmapped<Data.Entity.ExternalAccount, Command.GetExternalAccountDetailQuery.Result>();
         }
     }
 }

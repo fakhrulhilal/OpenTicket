@@ -23,6 +23,10 @@ namespace OpenTicket.Domain.Mapper
                 .ForMember(e => e.DraftId, map => map.MapFrom(cmd => cmd.Id > 0 ? cmd.Id : AddEmailAccountCommand.DraftId))
                 .ForMember(e => e.Id, map => map.MapFrom(_ => 0));
             this.IgnoreUnmapped<SaveTemporaryEmailAccountCommand, EmailAccount>();
+            CreateMap<AddExternalAccountCommand, ExternalAccount>();
+            this.IgnoreUnmapped<AddExternalAccountCommand, ExternalAccount>();
+            CreateMap<EditExternalAccountCommand, ExternalAccount>();
+            this.IgnoreUnmapped<EditExternalAccountCommand, ExternalAccount>();
         }
     }
 }

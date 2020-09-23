@@ -21,6 +21,7 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item @(string.IsNullOrEmpty(ViewBag.ActiveMenu) ? "active" : "")">@Html.RouteLink("Home", new { controller = "Home", action = "Index" }, new { @class = "nav-link" })</li>
+                <li class="nav-item @(ViewBag.ActiveMenu == "ExternalAccount" ? "active" : "")">@Html.RouteLink("External Account", new { controller = "ExternalAccount", action = "Index" }, new { @class = "nav-link" })</li>
                 <li class="nav-item @(ViewBag.ActiveMenu == "EmailAccount" ? "active" : "")">@Html.RouteLink("Email Account", new { controller = "EmailAccount", action = "Index" }, new { @class = "nav-link" })</li>
                 <li class="nav-item @(ViewBag.ActiveMenu == "Ticket" ? "active" : "")">@Html.RouteLink("Ticket", new { controller = "Ticket", action = "Index" }, new { @class = "nav-link" })</li>
                 <li class="nav-item">

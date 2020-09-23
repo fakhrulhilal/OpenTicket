@@ -1,0 +1,41 @@
+﻿@model IEnumerable<OpenTicket.Domain.Command.GetAllExternalAccountQuery.Result>
+@{
+    ViewBag.ActiveMenu = "ExternalAccount";
+    ViewBag.Title = "External Account Provider";
+}
+
+<h2>Registered External Accounts</h2>
+<a href="@Url.Action("Create")">
+    <svg class="bi" width="24" height="24" fill="currentColor">
+        <use xlink:href="~/assets/img/bootstrap-icons.svg#file-plus"/>
+    </svg> Create new extrenal account
+</a>
+<table class="table table-striped table-hover table-sm">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Identifier</th>
+        <th scope="col">Protocol</th>
+        <th scope="col">&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var externalAccount in Model)
+    {
+        <tr>
+            <td>@externalAccount.Id</td>
+            <td>@externalAccount.Name</td>
+            <td>@externalAccount.Identifier</td>
+            <td>@externalAccount.Protocol.Humanize()</td>
+            <td>
+                <a href="@Url.Action("Edit", new { id = externalAccount.Id })" title="edit">
+                    <svg class="bi" width="24" height="24" fill="currentColor">
+                        <use xlink:href="~/assets/img/bootstrap-icons.svg#pencil-square"/>
+                    </svg>
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
