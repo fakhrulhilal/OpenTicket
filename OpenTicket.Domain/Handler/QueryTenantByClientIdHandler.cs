@@ -23,7 +23,7 @@ namespace OpenTicket.Domain.Handler
         public async Task<QueryTenantByClientId.Tenant> Handle(QueryTenantByClientId request, CancellationToken cancellationToken)
         {
             var emailAccount = await _db.EmailAccounts.AsNoTracking()
-                .FirstOrDefaultAsync(ea => !ea.DraftId.HasValue && ea.Username == request.ClientId, cancellationToken);
+                .FirstOrDefaultAsync(ea => ea.Username == request.ClientId, cancellationToken);
             return _mapper.Map<QueryTenantByClientId.Tenant>(emailAccount);
         }
     }
