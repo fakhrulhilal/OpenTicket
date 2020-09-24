@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OpenTicket.Data.Entity;
@@ -11,21 +12,24 @@ namespace OpenTicket.Domain.Command
     public class SaveTemporaryEmailAccountCommand : MailClient.EmailAccount, IRequest
     {
         public int? Id { get; set; }
-        
+
         public class Handler : IRequestHandler<SaveTemporaryEmailAccountCommand>
         {
             private readonly OpenTicketDbContext _db;
             private readonly IMapper _mapper;
+            private readonly IValidator<SaveTemporaryEmailAccountCommand> _validator;
 
-            public Handler(OpenTicketDbContext db, IMapper mapper)
+            public Handler(OpenTicketDbContext db, IMapper mapper, IValidator<SaveTemporaryEmailAccountCommand> validator)
             {
+                _validator = validator ?? throw new ArgumentNullException(nameof(validator));
                 _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
                 _db = db ?? throw new ArgumentNullException(nameof(db));
             }
-            
+
             public async Task<Unit> Handle(SaveTemporaryEmailAccountCommand request,
                 CancellationToken cancellationToken)
             {
+                await _validator.ValidateAndThrowAsync(request, cancellationToken: cancellationToken);
                 var emailAccount = _mapper.Map<EmailAccount>(request);
                 bool isNewAccount = request.Id == AddEmailAccountCommand.DraftId;
                 var pendingEmailAccount = isNewAccount
@@ -39,6 +43,7 @@ namespace OpenTicket.Domain.Command
                     emailAccount.ServerPort = 993;
                     emailAccount.UseSecureConnection = true;
                 }
+
                 if (pendingEmailAccount != null)
                 {
                     emailAccount.Id = pendingEmailAccount.Id;
@@ -48,8 +53,17 @@ namespace OpenTicket.Domain.Command
                 {
                     await _db.EmailAccounts.AddAsync(emailAccount, cancellationToken);
                 }
+
                 await _db.SaveChangesAsync(cancellationToken);
                 return Unit.Value;
+            }
+        }
+
+        public class Validator : AbstractValidator<SaveTemporaryEmailAccountCommand>
+        {
+            public Validator()
+            {
+                Include(new BaseValidator());
             }
         }
     }

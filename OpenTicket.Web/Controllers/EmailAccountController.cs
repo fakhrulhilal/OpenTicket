@@ -57,7 +57,8 @@ namespace OpenTicket.Web.Controllers
         public async Task<ActionResult> SignInExternal(SaveTemporaryEmailAccountCommand command)
         {
             await _mediator.Send(command);
-            var oAuth2AuthRequest = OAuth2Helper.CreateRequest(command.Email, command.UserId,
+            var externalAccount = await _mediator.Send(new GetExternalAccountDetailQuery(command.ExternalAccountId ?? default));
+            var oAuth2AuthRequest = OAuth2Helper.CreateRequest(command.Email, externalAccount.Identifier, externalAccount.ClientId,
                 $"{Request.GetBaseUrl()}{Url.Action("LandingExternal")}", M365Helper.EmailScopes);
             return View(oAuth2AuthRequest);
         }
@@ -72,13 +73,13 @@ namespace OpenTicket.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.ExpectationFailed,
                     "Invalid session data returned after login from M365");
 
-            var tenant = await _mediator.Send(new QueryTenantByClientId(state.ClientId));
-            if (tenant.TenantId != state.Tenant)
+            var tenant = await _mediator.Send(new GetTenantByIdentifierQuery(state.Tenant));
+            if (tenant.ClientId != state.ClientId)
                 return new HttpStatusCodeResult(HttpStatusCode.ExpectationFailed,
                     "Invalid tenant returned after login from M365");
             var tokenResponse = await OAuth2Helper.AcquireTokenAsync(new AcquireTokenRequest
             {
-                Tenant = tenant.TenantId,
+                Tenant = tenant.Identifier,
                 ClientId = tenant.ClientId,
                 Secret = tenant.Secret,
                 ResponseCode = response.Code,

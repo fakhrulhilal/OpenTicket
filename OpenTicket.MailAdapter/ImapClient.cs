@@ -54,7 +54,7 @@ namespace OpenTicket.MailAdapter
 
         public virtual async Task AuthenticateAsync(CancellationToken cancellationToken)
         {
-            await Client.AuthenticateAsync(Account.UserId, Account.Secret, cancellationToken);
+            await Client.AuthenticateAsync(Account.Username, Account.Password, cancellationToken);
         }
 
         public IEnumerable<IMailMessage> FetchNewMessages()

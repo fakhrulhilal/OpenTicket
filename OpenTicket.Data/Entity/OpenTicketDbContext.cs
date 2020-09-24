@@ -74,7 +74,6 @@ namespace OpenTicket.Data.Entity
                     .HasMaxLength(50);
                 entity.Property(e => e.Username)
                     .HasColumnName("Username")
-                    .IsRequired()
                     .HasMaxLength(50);
                 entity.Property(e => e.Protocol)
                     .HasColumnName("Protocol")

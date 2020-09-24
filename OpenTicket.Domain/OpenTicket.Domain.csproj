@@ -48,7 +48,7 @@
     <Compile Include="Command\QueryEmailAccounts.cs" />
     <Compile Include="Command\PageableQuery.cs" />
     <Compile Include="Command\QueryEmailAccountById.cs" />
-    <Compile Include="Command\QueryTenantByClientId.cs" />
+    <Compile Include="Command\GetTenantByIdentifierQuery.cs" />
     <Compile Include="Command\QueryTickets.cs" />
     <Compile Include="Command\SaveTemporaryEmailAccountCommand.cs" />
     <Compile Include="Command\SaveEmailAccountTokenCommand.cs" />
@@ -56,10 +56,7 @@
     <Compile Include="Handler\CreateTicketCommandHandler.cs" />
     <Compile Include="Handler\DeleteEmailAccountCommandHandler.cs" />
     <Compile Include="Handler\EditEmailAccountCommandHandler.cs" />
-    <Compile Include="Handler\QueryEmailAccountsHandler.cs" />
-    <Compile Include="Handler\ImportEmailCommandHandler.cs" />
     <Compile Include="Handler\QueryEmailAccountByIdHandler.cs" />
-    <Compile Include="Handler\QueryTenantByClientIdHandler.cs" />
     <Compile Include="Handler\QueryTicketsHandler.cs" />
     <Compile Include="MailClient\IMailClient.cs" />
     <Compile Include="MailClient\IMailClientFactory.cs" />
@@ -72,11 +69,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\AutoMapperExtensions.cs" />
     <Compile Include="Utility\EnumExtensions.cs" />
-    <Compile Include="Validator\AddEmailAccountCommandValidator.cs" />
-    <Compile Include="Validator\DeleteEmailAccountCommandValidator.cs" />
-    <Compile Include="Validator\EditEmailAccountCommandValidator.cs" />
-    <Compile Include="Validator\QueryEmailAccountByIdValidator.cs" />
-    <Compile Include="Validator\SaveTemporaryEmailAccountCommandValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper">

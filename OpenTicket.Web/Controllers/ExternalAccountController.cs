@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using MediatR;
+using OpenTicket.Data.Entity;
 using OpenTicket.Domain.Command;
 
 namespace OpenTicket.Web.Controllers
@@ -15,9 +16,15 @@ namespace OpenTicket.Web.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<ActionResult> Index()
+        [HttpGet]
+        public async Task<ActionResult> Index(MailProtocolType? protocol)
         {
-            var allExternalAccounts = await _mediator.Send(new GetAllExternalAccountQuery());
+            var allExternalAccounts = await _mediator.Send(new GetAllExternalAccountQuery
+            {
+                Protocol = protocol
+            });
+            if (Request.IsAjaxRequest())
+                return Json(allExternalAccounts, JsonRequestBehavior.AllowGet);
             return View(allExternalAccounts);
         }
 

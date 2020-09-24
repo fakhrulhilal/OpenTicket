@@ -308,6 +308,7 @@
     <Content Include="assets\css\bootstrap.min.css" />
     <Content Include="assets\img\bootstrap-icons.svg" />
     <Content Include="assets\js\bootstrap.bundle.min.js" />
+    <Content Include="assets\js\email-account.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="assets\css\Site.css" />
@@ -326,6 +327,7 @@
     <Content Include="Views\ExternalAccount\Create.cshtml" />
     <Content Include="Views\ExternalAccount\Edit.cshtml" />
     <Content Include="Views\ExternalAccount\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\EmailAccount.cshtml" />
     <Content Include="Views\Ticket\Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

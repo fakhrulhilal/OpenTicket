@@ -10,16 +10,16 @@ namespace OpenTicket.Domain.Mapper
         public DomainToEntityMapping()
         {
             CreateMap<AddEmailAccountCommand, EmailAccount>()
-                .ForMember(e => e.Username, map => map.MapFrom(cmd => cmd.UserId))
-                .ForMember(e => e.Password, map => map.MapFrom(cmd => cmd.Secret));
+                .ForMember(e => e.Username, map => map.MapFrom(cmd => cmd.Username))
+                .ForMember(e => e.Password, map => map.MapFrom(cmd => cmd.Password));
             this.IgnoreUnmapped<AddEmailAccountCommand, EmailAccount>();
             CreateMap<EditEmailAccountCommand, EmailAccount>()
-                .ForMember(e => e.Username, map => map.MapFrom(cmd => cmd.UserId))
-                .ForMember(e => e.Password, map => map.MapFrom(cmd => cmd.Secret));
+                .ForMember(e => e.Username, map => map.MapFrom(cmd => cmd.Username))
+                .ForMember(e => e.Password, map => map.MapFrom(cmd => cmd.Password));
             this.IgnoreUnmapped<EditEmailAccountCommand, EmailAccount>();
             CreateMap<SaveTemporaryEmailAccountCommand, EmailAccount>()
-                .ForMember(e => e.Username, map => map.MapFrom(cmd => cmd.UserId))
-                .ForMember(e => e.Password, map => map.MapFrom(cmd => cmd.Secret))
+                .ForMember(e => e.Username, map => map.MapFrom(cmd => cmd.Username))
+                .ForMember(e => e.Password, map => map.MapFrom(cmd => cmd.Password))
                 .ForMember(e => e.DraftId, map => map.MapFrom(cmd => cmd.Id > 0 ? cmd.Id : AddEmailAccountCommand.DraftId))
                 .ForMember(e => e.Id, map => map.MapFrom(_ => 0));
             this.IgnoreUnmapped<SaveTemporaryEmailAccountCommand, EmailAccount>();
