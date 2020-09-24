@@ -68,21 +68,21 @@ namespace OpenTicket.MailAdapter
             foreach (var id in ids)
             {
                 var message = _mailbox.GetMessage(id);
-                yield return new ImapMessage(id, message);
+                yield return new Message(id, message);
             }
         }
 
         public async Task DeleteAsync(IMailMessage message, CancellationToken cancellationToken)
         {
-            if (!(message is ImapMessage imapMessage))
+            if (!(message is Message imapMessage))
                 throw new InvalidOperationException("Only support deleting message fetched through this client");
             await _mailbox.AddFlagsAsync(imapMessage.Id, MessageFlags.Deleted, true, cancellationToken);
         }
 
-        private class ImapMessage : MailMessageAdapter
+        private class Message : MailMessageAdapter
         {
             internal UniqueId Id { get; }
-            public ImapMessage(UniqueId id, MimeMessage inner) : base(inner) => Id = id;
+            public Message(UniqueId id, MimeMessage inner) : base(inner) => Id = id;
         }
     }
 }

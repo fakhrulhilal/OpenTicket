@@ -346,9 +346,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
     <Content Include="assets\js\jquery-3.4.1.slim.min.map" />
     <Content Include="assets\js\jquery-3.4.1.min.map" />

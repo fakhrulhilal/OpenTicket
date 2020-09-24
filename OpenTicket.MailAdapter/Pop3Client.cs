@@ -56,21 +56,21 @@ namespace OpenTicket.MailAdapter
             for (int i = 0; i < totalNewMessage; i++)
             {
                 var mimeMessage = _client.GetMessage(i);
-                yield return new Pop3Message(i, mimeMessage);
+                yield return new Message(i, mimeMessage);
             }
         }
 
         public async Task DeleteAsync(IMailMessage message, CancellationToken cancellationToken)
         {
-            if (!(message is Pop3Message pop3Message))
+            if (!(message is Message pop3Message))
                 throw new InvalidOperationException("Only support deleting message fetched from this client");
             await _client.DeleteMessageAsync(pop3Message.Index, cancellationToken);
         }
 
-        private class Pop3Message : MailMessageAdapter
+        private class Message : MailMessageAdapter
         {
             internal int Index { get; }
-            public Pop3Message(int index, MimeMessage inner) : base(inner) => Index = index;
+            public Message(int index, MimeMessage inner) : base(inner) => Index = index;
         }
     }
 }

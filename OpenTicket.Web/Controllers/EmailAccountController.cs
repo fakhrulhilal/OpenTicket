@@ -41,7 +41,7 @@ namespace OpenTicket.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Edit(int id)
         {
-            var emailAccount = await _mediator.Send(new QueryEmailAccountById(id));
+            var emailAccount = await _mediator.Send(new GetEmailAccountByIdQuery(id));
             var command = _mapper.Map<EditEmailAccountCommand>(emailAccount);
             return View(command);
         }

@@ -19,7 +19,7 @@ namespace OpenTicket.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(MailProtocolType? protocol)
         {
-            var allExternalAccounts = await _mediator.Send(new GetAllExternalAccountQuery
+            var allExternalAccounts = await _mediator.Send(new GetAllExternalsAccountQuery
             {
                 Protocol = protocol
             });

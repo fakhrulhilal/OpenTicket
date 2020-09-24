@@ -11,12 +11,8 @@ namespace OpenTicket.MailAdapter
 {
     public class Microsoft365Client : ImapClient
     {
-        private readonly Data.Entity.OpenTicketDbContext _db;
-
-        public Microsoft365Client(EmailAccount account, Data.Entity.OpenTicketDbContext db) : base(account)
-        {
-            _db = db ?? throw new ArgumentNullException(nameof(db));
-        }
+        public Microsoft365Client(EmailAccount account) : base(account)
+        { }
 
         public override async Task AuthenticateAsync(CancellationToken cancellationToken)
         {

@@ -10,11 +10,11 @@ using OpenTicket.Data.Entity;
 
 namespace OpenTicket.Domain.Command
 {
-    public class GetAllExternalAccountQuery : IRequest<IEnumerable<GetAllExternalAccountQuery.Result>>
+    public class GetAllExternalsAccountQuery : IRequest<IEnumerable<GetAllExternalsAccountQuery.Result>>
     {
         public MailProtocolType? Protocol { get; set; }
 
-        public class Handler : IRequestHandler<GetAllExternalAccountQuery, IEnumerable<Result>>
+        public class Handler : IRequestHandler<GetAllExternalsAccountQuery, IEnumerable<Result>>
         {
             private readonly OpenTicketDbContext _db;
             private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ namespace OpenTicket.Domain.Command
                 _db = db ?? throw new ArgumentNullException(nameof(db));
             }
 
-            public Task<IEnumerable<Result>> Handle(GetAllExternalAccountQuery request,
+            public Task<IEnumerable<Result>> Handle(GetAllExternalsAccountQuery request,
                 CancellationToken cancellationToken)
             {
                 var externalAccounts = _db.ExternalAccounts.AsNoTracking();

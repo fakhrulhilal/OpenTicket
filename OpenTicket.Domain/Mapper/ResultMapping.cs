@@ -7,7 +7,7 @@ namespace OpenTicket.Domain.Mapper
     {
         public ResultMapping()
         {
-            CreateMap<QueryEmailAccountById.EmailAccount, EditEmailAccountCommand>();
+            CreateMap<GetEmailAccountByIdQuery.Result, EditEmailAccountCommand>();
             CreateMap<MailClient.IMailMessage, CreateTicketCommand>()
                 .ForMember(p => p.CustomerEmail, map => map.MapFrom(src => src.From.Address))
                 .ForMember(p => p.CustomerName, map => map.MapFrom(src => src.From.DisplayName))

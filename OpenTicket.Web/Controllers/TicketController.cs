@@ -18,7 +18,7 @@ namespace OpenTicket.Web.Controllers
         
         public async Task<ActionResult> Index()
         {
-            var tickets = (await _mediator.Send(new QueryTickets())).ToArray();
+            var tickets = (await _mediator.Send(new GetAllTicketsQuery())).ToArray();
             return View(tickets);
         }
     }
