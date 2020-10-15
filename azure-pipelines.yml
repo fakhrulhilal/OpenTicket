@@ -5,6 +5,8 @@
 
 trigger:
 - master
+- azure-pipelines
+- separate-tenant
 
 pool: 'KanaExpress'
 
