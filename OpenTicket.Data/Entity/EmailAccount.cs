@@ -7,6 +7,7 @@ namespace OpenTicket.Data.Entity
     public class EmailAccount
     {
         public int Id { get; set; }
+        public int? ExternalAccountId { get; set; }
         public bool IsActive { get; set; }
         public int? DraftId { get; set; }
         public string Email { get; set; }
@@ -21,6 +22,7 @@ namespace OpenTicket.Data.Entity
         public bool UseSecureConnection { get; set; }
         public MailProtocolType Protocol { get; set; }
 
+        public virtual ExternalAccount ExternalAccount { get; set; }
         public virtual ICollection<Ticket> Tickets { get; set; } = new HashSet<Ticket>();
     }
 

@@ -1,5 +1,4 @@
-﻿@using OpenTicket.Data.Entity
-@model OpenTicket.Domain.Command.AddEmailAccountCommand
+﻿@model OpenTicket.Domain.Command.AddEmailAccountCommand
 @{
     ViewBag.ActiveMenu = "EmailAccount";                                                                             
     ViewBag.Title = "Add Email Account";
@@ -7,76 +6,7 @@
 
 <h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm("Create", "EmailAccount", FormMethod.Post))
+@using (Html.BeginForm("Create", "EmailAccount", FormMethod.Post, new { data_external_login = Url.Action("SignInExternal") }))
 {
-    <div class="form-group">
-        @Html.LabelFor(p => p.Email)
-        <input type="text" name="@Html.IdFor(p => p.Email)" class="form-control" v-on:change="suggestUsername" v-model="email" />
-    </div>
-    <div class="form-group form-check">
-        @Html.CheckBoxFor(p => p.IsActive, new { @class = "form-check-input" })
-        @Html.LabelFor(p => p.IsActive, new { @class = "form-check-label" })
-    </div>
-   <div class="form-group">
-        <label for="@Html.IdFor(p => p.UserId)">{{ protocol == 'M365' ? 'Client ID' : 'Username' }}</label>
-        @Html.TextBoxFor(p => p.UserId, new { @class = "form-control", v_model = "userId" })
-    </div>
-    <div class="form-group">
-        <label for="@Html.IdFor(p => p.Secret)">{{ protocol == 'M365' ? 'Secret' : 'Password' }}</label>
-        @Html.PasswordFor(p => p.Secret, new { @class = "form-control" })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(p => p.Protocol)
-        <select name="@Html.IdFor(p => p.Protocol)" class="form-control" v-model="protocol">
-            <option value="@MailProtocolType.Imap">@MailProtocolType.Imap.Humanize()</option>
-            <option value="@MailProtocolType.Pop3">@MailProtocolType.Pop3.Humanize()</option>
-            <option value="@MailProtocolType.M365">@MailProtocolType.M365.Humanize()</option>
-        </select>
-    </div>
-    <div class="form-group" v-if="protocol != 'M365'">
-        <label for="@nameof(Model.ServerAddress)">Server</label>
-        @Html.TextBoxFor(p => p.ServerAddress):@Html.TextBoxFor(p => p.ServerPort, new { type = "number" })
-        @Html.CheckBoxFor(p => p.UseSecureConnection, new { @class = "form-control" }) Use secure connection
-    </div>
-    <div class="form-group" v-if="protocol == 'Imap'">
-        @Html.LabelFor(p => p.MailBox)
-        @Html.TextBoxFor(p => p.MailBox)
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-    <button id="btn-login" type="submit" class="btn btn-primary" v-if="protocol == 'M365'" @@click="signInExternal">Sign In</button>
+    @Html.EditorForModel()
 }
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script type="text/javascript">
-    var emailAccountEditor = new Vue({
-        el: 'form[action="/EmailAccount/Create"]',
-        data: {
-            protocol: '',
-            userId: '',
-            email: ''
-        },
-        methods: {
-            suggestUsername: function () {
-                if (this.protocol !== 'M365' && !/^\s*$/.test(this.email))
-                    this.userId = this.email;
-            },
-            signInExternal: function () {
-                let form = document.getElementsByTagName('form')[0];
-                form.setAttribute('target', '_blank');
-                form.setAttribute('data-original-action', form.getAttribute('action'));
-                form.setAttribute('action', '@Url.Action("SignInExternal")');
-                let submitButton = document.querySelector('button[type="submit"]');
-                submitButton.setAttribute('disabled', 'disabled');
-            }
-        }
-    })
-    window.addEventListener('message', function (event) {
-        if (event.data.AccessToken && !/^\s*$/.test(event.data.AccessToken)) {
-            let submitButton = document.querySelector('button[type="submit"]');
-            submitButton.removeAttribute('disabled');
-            let form = document.getElementsByTagName('form')[0];
-            form.setAttribute('action', form.getAttribute('data-original-action'));
-            form.removeAttribute('data-original-action');
-            form.removeAttribute('target');
-       }
-    });
-</script>

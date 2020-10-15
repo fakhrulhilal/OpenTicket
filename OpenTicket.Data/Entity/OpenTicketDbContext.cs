@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace OpenTicket.Data.Entity
 {
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Set by EF core")]
     public class OpenTicketDbContext : DbContext
     {
+        private const string DefaultConnectionString = "Data Source=(local);Initial Catalog=OpenTicket;Integrated Security=true;";
         private readonly string _connectionString;
 
         public OpenTicketDbContext()
@@ -28,15 +30,10 @@ namespace OpenTicket.Data.Entity
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<EmailAccount> EmailAccounts { get; set; }
         public virtual DbSet<Ticket> Tickets { get; set; }
+        public virtual DbSet<ExternalAccount> ExternalAccounts { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!string.IsNullOrWhiteSpace(_connectionString))
-                optionsBuilder.UseSqlServer(_connectionString);
-            else
-                optionsBuilder.UseSqlServer(
-                    "Data Source=(local);Initial Catalog=OpenTicket;Integrated Security=true;");
-        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
+            optionsBuilder.UseSqlServer(_connectionString ?? DefaultConnectionString);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -59,6 +56,8 @@ namespace OpenTicket.Data.Entity
                     .HasColumnName("IsActive")
                     .IsRequired()
                     .HasDefaultValue(true);
+                entity.Property(e => e.ExternalAccountId)
+                    .HasColumnName("ExternalAccountId");
                 entity.Property(e => e.DraftId)
                     .HasColumnName("DraftId");
                 entity.Property(e => e.Email)
@@ -75,7 +74,6 @@ namespace OpenTicket.Data.Entity
                     .HasMaxLength(50);
                 entity.Property(e => e.Username)
                     .HasColumnName("Username")
-                    .IsRequired()
                     .HasMaxLength(50);
                 entity.Property(e => e.Protocol)
                     .HasColumnName("Protocol")
@@ -85,6 +83,10 @@ namespace OpenTicket.Data.Entity
                     .HasColumnName("AccessToken");
                 entity.Property(e => e.RefreshToken)
                     .HasColumnName("RefreshToken");
+                entity.HasOne(e => e.ExternalAccount)
+                    .WithMany(e => e.EmailAccounts)
+                    .HasForeignKey(e => e.ExternalAccountId)
+                    .HasConstraintName("FK_EmailAccount_Provider");
             });
 
             modelBuilder.Entity<Ticket>(entity =>
@@ -103,6 +105,29 @@ namespace OpenTicket.Data.Entity
                     .WithMany(p => p.Tickets)
                     .HasForeignKey(d => d.EmailAccountId)
                     .HasConstraintName("FK_Ticket_ImportedEmail");
+            });
+
+            modelBuilder.Entity<ExternalAccount>(entity =>
+            {
+                entity.ToTable("ExternalAccounts");
+                entity.Property(e => e.Protocol)
+                    .HasColumnName("Protocol")
+                    .IsRequired()
+                    .HasConversion<short>();
+                entity.Property(e => e.Name)
+                    .HasColumnName("Name")
+                    .IsRequired()
+                    .HasMaxLength(50);
+                entity.Property(e => e.Identifier)
+                    .HasColumnName("TenantIdentifier")
+                    .IsRequired()
+                    .HasMaxLength(250);
+                entity.Property(e => e.ClientId)
+                    .HasColumnName("ClientId")
+                    .IsRequired();
+                entity.Property(e => e.Secret)
+                    .HasColumnName("Secret")
+                    .IsRequired();
             });
         }
     }

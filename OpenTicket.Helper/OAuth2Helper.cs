@@ -8,9 +8,8 @@ namespace OpenTicket.Helper
 {
     public static class OAuth2Helper
     {
-        public static OAuth2AuthRequest CreateRequest(string email, string clientId, string redirect, string[] scopes)
+        public static OAuth2AuthRequest CreateRequest(string email, string tenant, string clientId, string redirect, string[] scopes)
         {
-            string tenant = email.Split('@')[1];
             string codeVerifier = Guid.NewGuid().ToString().Replace('-', '\0');
             var request = new OAuth2AuthRequest
             {

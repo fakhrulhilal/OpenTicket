@@ -1,0 +1,36 @@
+@using OpenTicket.Domain.MailClient
+@model OpenTicket.Domain.Command.EditExternalAccountCommand
+
+@{
+    ViewBag.Title = "Edit external account";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Edit", "ExternalAccount", FormMethod.Post))
+{
+    @Html.HiddenFor(p => p.Id)
+    <div class="form-group">
+        @Html.LabelFor(p => p.Name)
+        @Html.TextBoxFor(p => p.Name, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.Identifier)
+        @Html.TextBoxFor(p => p.Identifier, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.ClientId)
+        @Html.TextBoxFor(p => p.ClientId, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.Secret)
+        @Html.PasswordFor(p => p.Secret, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.Protocol)
+        <select name="@Html.IdFor(p => p.Protocol)" class="form-control" v-model="protocol">
+            <option value="@MailProtocolType.M365">@MailProtocolType.M365.Humanize()</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+}

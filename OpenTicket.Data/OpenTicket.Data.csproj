@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Entity\Customer.cs" />
     <Compile Include="Entity\EmailAccount.cs" />
+    <Compile Include="Entity\ExternalAccount.cs" />
     <Compile Include="Entity\OpenTicketDbContext.cs" />
     <Compile Include="Entity\Ticket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

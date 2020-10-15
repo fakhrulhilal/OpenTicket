@@ -6,23 +6,23 @@ namespace OpenTicket.Domain.Mapper
     {
         public EntityToDomainMapping()
         {
-            CreateMap<Data.Entity.EmailAccount, Command.QueryEmailAccounts.EmailAccount>()
-                .ForMember(dst => dst.UserId, map => map.MapFrom(src => src.Username))
-                .ForMember(dst => dst.Secret, map => map.MapFrom(src => src.Password));
-            this.IgnoreUnmapped<Data.Entity.EmailAccount, Command.QueryEmailAccounts.EmailAccount>();
-            CreateMap<Data.Entity.EmailAccount, Command.QueryEmailAccountById.EmailAccount>()
-                .ForMember(dst => dst.UserId, map => map.MapFrom(src => src.Username))
-                .ForMember(dst => dst.Secret, map => map.MapFrom(src => src.Password));
-            this.IgnoreUnmapped<Data.Entity.EmailAccount, Command.QueryEmailAccountById.EmailAccount>();
-            CreateMap<Data.Entity.Ticket, Command.QueryTickets.Ticket>()
+            CreateMap<Data.Entity.EmailAccount, Command.QueryEmailAccounts.Result>()
+                .ForMember(dst => dst.Tenant, map => map.MapFrom(src => src.ExternalAccount != null ? src.ExternalAccount.Identifier : null))
+                .ForMember(dst => dst.ClientId, map => map.MapFrom(src => src.ExternalAccount != null ? src.ExternalAccount.ClientId : null))
+                .ForMember(dst => dst.Secret, map => map.MapFrom(src => src.ExternalAccount != null ? src.ExternalAccount.Secret : null));
+            this.IgnoreUnmapped<Data.Entity.EmailAccount, Command.QueryEmailAccounts.Result>();
+            CreateMap<Data.Entity.EmailAccount, Command.GetEmailAccountByIdQuery.Result>();
+            this.IgnoreUnmapped<Data.Entity.EmailAccount, Command.GetEmailAccountByIdQuery.Result>();
+            CreateMap<Data.Entity.Ticket, Command.GetAllTicketsQuery.Result>()
                 .ForMember(dst => dst.CustomerName, map => map.MapFrom(src => src.Customer.DisplayName))
                 .ForMember(dst => dst.CustomerEmail, map => map.MapFrom(src => src.Customer.Email));
-            this.IgnoreUnmapped<Data.Entity.Ticket, Command.QueryTickets.Ticket>();
-            CreateMap<Data.Entity.EmailAccount, Command.QueryTenantByClientId.Tenant>()
-                .ForMember(dst => dst.ClientId, map => map.MapFrom(src => src.Username))
-                .ForMember(dst => dst.Secret, map => map.MapFrom(src => src.Password))
-                .ForMember(dst => dst.TenantId, map => map.MapFrom(src => src.Email.Split('@')[1]));
-            this.IgnoreUnmapped<Data.Entity.EmailAccount, Command.QueryTenantByClientId.Tenant>();
+            this.IgnoreUnmapped<Data.Entity.Ticket, Command.GetAllTicketsQuery.Result>();
+            CreateMap<Data.Entity.ExternalAccount, Command.GetTenantByIdentifierQuery.Result>();
+            this.IgnoreUnmapped<Data.Entity.ExternalAccount, Command.GetTenantByIdentifierQuery.Result>();
+            CreateMap<Data.Entity.ExternalAccount, Command.GetAllExternalsAccountQuery.Result>();
+            this.IgnoreUnmapped<Data.Entity.ExternalAccount, Command.GetAllExternalsAccountQuery.Result>();
+            CreateMap<Data.Entity.ExternalAccount, Command.GetExternalAccountDetailQuery.Result>();
+            this.IgnoreUnmapped<Data.Entity.ExternalAccount, Command.GetExternalAccountDetailQuery.Result>();
         }
     }
 }
